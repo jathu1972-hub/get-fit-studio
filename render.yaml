@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: get-fit-backend
+    env: node
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        sync: false
+        # After deploying frontend, set this to your frontend URL, e.g. https://get-fit-frontend.onrender.com
+      # Optional: add DATABASE_URL if you switch to Postgres later
+    autoDeploy: true
+
+  - type: static_site
+    name: get-fit-frontend
+    env: static
+    region: oregon
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_BACKEND_URL
+        sync: false
+        # Set this to your backend URL after deploy, e.g. https://get-fit-backend.onrender.com
+    autoDeploy: true
